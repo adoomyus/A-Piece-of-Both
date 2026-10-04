@@ -1,0 +1,490 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{url}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\LARGE \textbf{A Piece of Both}} \\[0.3cm]
+    \vspace{0.5cm}
+    
+    \rule{\linewidth}{0.2pt} \\[1.5cm]
+    
+    \includegraphics[width=0.55\textwidth]{bloch_sphere.png} \\[1.5cm]
+    
+    \rule{\linewidth}{0.2pt} \\[1cm]
+   
+    {\large Adamya Singh} \\[0.4cm]
+    {\large Irvington High School Research Paper} \\[0.4cm]
+    {\large October 2026}
+    
+\end{titlepage}
+
+\newpage
+\section{Introduction}
+
+\indent The era of AI has come, changing how we answer questions, code, create images, and support people with disabilities. However, this convenience requires an equally massive amount of compute which in turn comes at a cost of massive power consumption. To put things in perspective, a research from Hugging Face and MIT shows that generating a single low-quality, 5-second video consumes about 90 Wh of energy. To put that in perspective, that is enough electricity to charge a smartphone 15 to 18 times. If we exptrapolate it to a 4K, 60fps, 10 minutes video the energy cost will be 550-850 kWh. Again to set the context right, this energy can charge a cell phone for almost 300 years, power a Tesla for 2000 miles OR provide a 19 days of power supply to an average American home.
+\vspace{0.3cm}
+
+A big reason for this high energy demand is that traditional AI/Compute runs entirely on binary logic, computed on CMOS technology. It suffers from what was postulated in 1961 by Rolf Landauer, "It asserts that information processing is physical, and that the loss or erasure of information in logically irreversible operations incurs an unavoidable, fundamental physical cost in the form of energy dissipation, heat." Today’s silicon microprocessors dissipate about $10^3 \text{ to } 10^5$ times more energy per operation than the Landauer limit due to parasitic resistance, capacitance charging, and leakage currents. However, as transistor gate geometries approach atomic scales, hardware designers are rapidly approaching this physical thermodynamic wall. For decades, computers have operated on strict $1$s and $0$s. We used to view this rigid division as an absolute law of nature, similar to how we assumed a physical object had to be either a particle or a wave. However, the subatomic universe doesn't follow this clean-cut logic. Quantum Computing: Unitary quantum evolution ($U U^\dagger = I$) is inherently reversible. Quantum logic operations are mathematically constrained to preserve information up until a measurement or wave-function collapse occurs.
+\vspace{0.3cm}
+
+At the absolute center of this defiance sits the \textbf{qubit} (quantum bit). Unlike a classical bit restricted to a deterministic state space of $x \in \{0, 1\}$, a qubit exists in a continuous landscape known as a superposition. It is a mathematical state where a statement is simultaneously true and false; where an information channel carries $1$ and $0$ at the exact same moment. It refuses to choose a side until it is forced to collapse by an observer, as modeled by a state vector on a complex vector space:
+\begin{equation}
+ |\psi\rangle = \alpha|0\rangle + \beta|1\rangle
+\end{equation}
+\vspace{0.1cm}
+
+where the continuous amplitudes $\alpha, \beta \in \mathbb{C}$ are complex numbers. While following the constraint:
+
+\begin{equation}
+|\alpha|^2 + |\beta|^2 = 1
+\end{equation}
+\vspace{0.1cm}
+
+This lawlessness leads us to an unsettling reality. Classical computers learn by processing neat, sequential data. But when a machine is forced to learn using quantum frameworks, what purpose does holding two contradictory realities at once actually have? Does multiplying the complexity of the data space not make learning useless? 
+The answer is as elegant as it is revolutionary. This essay will pull back the curtain on Quantum Machine Learning. By exploring the geometry of the Bloch sphere, the mathematical engine of quantum gates, how high-dimensional Hilbert spaces paradoxically simplify complex patterns, and how this can be integrated with machine learning despite the paradoxical problem from before. We will map out exactly how mathematics cages and exploits a phenomenon that breaks reality itself.
+
+\section{The Bloch Sphere}
+
+Everything quantum starts with the qubit. While a classical bit is binary, a qubit registers both $1$ and $0$ simultaneously. But how do we visualize an object that defies logic? 
+
+Mathematically, the qubit is constructed from two complex numbers, $\alpha$ and $\beta$. Because each complex number possesses both a real and an imaginary component, a qubit requires a four-dimensional coordinate space to fully track. 
+
+Since human perception can only visualize three dimensions, a four-dimensional piece of data is an immediate problem. To solve this, we must return to the structural boundary established by the normalization constraint:
+
+\begin{equation}
+|\alpha|^2 + |\beta|^2 = 1 
+\end{equation}
+\vspace{0.1cm}
+
+This equation acts as a restrictor. Due to the simple fact of there being a modulus wrapping each complex number, we an use the formulas for the magnitude of a complex number:
+
+\begin{equation}
+z = a + bi
+\end{equation}
+
+\begin{equation*}
+|z| = \sqrt{\text{Re}(z)^2 + \text{Im}(z)^2} 
+\end{equation*}\notag
+
+\begin{equation*}
+|z|^2 = a^2 + b^2 
+\end{equation*}\notag
+\vspace{0.1cm}
+
+Since $\alpha = a + bi$ and $\beta = c + di$, this turns $|\alpha|^2 + |\beta|^2 = 1$ into $a^2 +b^2+c^2+d^2 = 1$ which defines a 3-sphere, $S^3$, in a 4D real space, $\mathbb{R}^4$. However, there is a  ``global phase'' which is physically invisible, so we can ignore it. Removing it removes 1 angle, leaving a standard 2D surface of a 3D sphere, $S^2$.
+
+The sphere requires two independent numbers, the two numbers being latitude and longitude, or in physics the polar angle, $\theta$, and the azimuthal angle, $\phi$. 
+
+This was all discovered by Felix Bloch, who managed to represent it in a sphere so that opposite poles showed baseline states. The North state represents $|0\rangle$ and the South $|1\rangle$. In his name this representation was called the \textbf{Bloch Sphere}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\textwidth]{bloch_1.png}
+    \caption{{\small Adapted from ResearchGate, the Bloch Sphere representation of a pure qubit state $|\psi\rangle$, parameterized by the polar angle $\theta$ and the azimuthal angle $\phi$.}}
+    \label{fig:bloch_sphere}
+\end{figure}
+
+\vspace{0.3cm}
+
+Using complex formulas of real and imaginary identities as well as utilizing the polar and azimuthal angles, he created the parameterized pure state formula:
+
+\begin{equation}
+|\psi\rangle = \cos\left(\frac{\theta}{2}\right)|0\rangle + e^{i\phi}\sin\left(\frac{\theta}{2}\right)|1\rangle \tag{5}
+\end{equation}
+
+\section{Quantum Gates}
+
+Back to the basic form of a qubit, it has a 1 and a 0 simultaneously, however what is this even called? This mix is called \textbf{superposition}. Quantum gates are responsible for rotating these states, rather than just turning them on or off like a classical computer. A key idea to note is that quantum gates are reversible, you are always allowed to reverse the operation without any information loss.
+
+Starting off the main quantum gates:
+
+\begin{itemize}
+\item Pauli X-Gate
+\item Hadamard Gate
+\item Phase Gates 
+\item CNOT Gate
+\item SWAP Gate 
+\end{itemize}
+\vspace{0.1cm}
+
+Each quantum gate listed above plays a distinct operational role within the processing of a qubit. The Pauli X-Gate acts as a NOT gate, meaning that $|0\rangle$ turns to $|1\rangle$. Where X is the matrix for the gate it is represented by:
+
+\begin{equation*}
+X|0\rangle = |1\rangle, \quad X|1\rangle = |0\rangle
+\end{equation*}
+\vspace{0.1cm}
+
+The Hadamard Gate creates equal super position this means that each portion of a qubit, $|0\rangle$ and $|1\rangle$, has an equal probability being either portion when observed, a $50$/$50$. So, $|0\rangle$ turns to $|0\rangle + |1\rangle$, and $|1\rangle$ becomes $|0\rangle - |1\rangle$. This can be represented by:
+
+\begin{equation*}
+H\vert 0 \rangle = \frac{\vert 0 \rangle + \vert 1 \rangle}{\sqrt{2}} \quad \text{and} \quad H\vert 1 \rangle = \frac{\vert 0 \rangle - \vert 1 \rangle}{\sqrt{2}}
+\end{equation*}
+\vspace{0.1cm}
+
+Standard Phase Gates leave $|0\rangle$ state untouched while multiplying the $|1\rangle$ state by the complex factor $e^{i\theta}$. Now if you measure the qubit after applying a phase gate you will retain the same probability of a $|0\rangle$ or $|1\rangle$, however it changes the \textit{interfrence}. On the Bloch Sphere this can be represented by a rotation in the Z-axis. This is represented by:
+
+\begin{equation*}
+S|0\rangle = |0\rangle \quad \text{and} \quad S|1\rangle = e^{i\theta}|1\rangle
+\end{equation*}
+\vspace{0.1cm}
+
+The CNOT Gate creates entanglement. The way it does this is by looking at a control qubit and base on the state of that qubit it decides what to do to the next qubit. If the control qubit is a $|0\rangle$ then the qubit stays unchanged. If it is a $|1\rangle$ it swaps the superposition of the second qubit called the target.
+
+\begin{equation*}
+\begin{aligned}
+\text{CNOT}\lvert 00 \rangle &= \lvert 00 \rangle \\
+\text{CNOT}\lvert 01 \rangle &= \lvert 01 \rangle \\
+\text{CNOT}\lvert 10 \rangle &= \lvert 11 \rangle \\
+\text{CNOT}\lvert 11 \rangle &= \lvert 10 \rangle 
+\end{aligned}
+\end{equation*}
+\vspace{0.1cm}
+
+The SWAP Gate does is a swap function that swaps the order of the qubits. An ordered pair $|ab\rangle$ applying the SWAP gate makes it so that the new qubit is $|ba\rangle$. The way this is represented would be:
+
+\begin{equation*}
+\text{SWAP}\lvert a, b \rangle = \lvert b, a \rangle \quad \text{(e.g., } \text{SWAP}\lvert 10 \rangle = \lvert 01 \rangle\text{)}
+\end{equation*}
+
+\section{Hilbert Spaces}
+
+A Hilbert space denoted as $\mathcal{H}$ can be essentially denoted as a rigid mathematical framework where geometry and calculus on infinitely complicated products like waves, functions, and quantum particles as if they were simply arrows in a three dimensional space. It treats complex functions as simple points using dot products, it breaks messy equations into perfect building blocks with Fourier series, and it essentially powers the entire framework of quantum mechanics. 
+
+To get a Hilbert space you must layer four distinct mathematical structures onto a set of objects.
+
+The first step to creating a Hilbert space is a vector space base. You must have a set of vectors where you can perform addition and scalar multiplication while obeying standard rules like associativity, commutativity, etc. If $(u,v) \in \mathcal{H}$ and (a,b) are scalars, then:
+
+\begin{equation}
+au + bv \in \mathcal{H} \tag{6}
+\end{equation}
+\vspace{0.1cm}
+
+The next step is that the inner vector space must be equipped with an inner product, denoted by $\langle u,v\rangle$. The inner product maps a pair of vectors to a scalar. For a complex Hilbert space, it must satisfy three axioms, conjugate symmetry, linearity, and positive-definiteness for all vectors $u,v,w \in \mathcal{H}$ and scalars $\alpha , \beta \in \mathbb{C}$:
+
+\begin{equation}
+\langle u,v \rangle = \overline{\langle v,u \rangle }\tag{7}
+\end{equation}
+
+\begin{equation*}
+\langle \alpha u+\beta v,w\rangle =\alpha \langle u,w\rangle +\beta \langle v,w\rangle
+\end{equation*}
+
+\begin{equation*}
+\langle u,u\rangle \ge 0,\quad \text{and}\quad \langle u,u\rangle =0\iff u=0
+\end{equation*}
+
+From this inner product, we naturally derive the geometric concepts of length and orthogonality. The length of a vector is defined as $\|u\| = \sqrt{\langle u, u \rangle}$, and they are orthogonal if $\langle u,v \rangle = 0$.
+
+The third step is to define the distance $d(u,v)$ between two vectors as the normality of their difference. This is represented by:
+
+\begin{equation}
+d(u,v)=\|u-v\|=\sqrt{\langle u-v,u-v\rangle } \tag{8}
+\end{equation}
+\vspace{0.1cm}
+
+Now because it possesses a metric, a Hilbert Space must obey an enquality called the \textbf{Cauchy-Shwarz Inequality}, which is a must in abstract spaces. This inequality is represented by:
+
+\begin{equation}
+|\langle u,v\rangle | \le \|u\|\|v\| \tag{9}
+\end{equation}
+\vspace{0.1cm}
+
+The final step is the completeness. A inner product is not a Hilbert Space unless it is complete. 
+
+A metric space is complete if every \textbf{Cauchy sequence} converges to a limit that also lives inside that space. A sequence of vectors $\{u_n\}_{n=1}^{\infty}$ is a Cauchy sequence if the terms get infinitely close to each other as you move down the line:
+
+\begin{equation}
+\lim _{m,n\rightarrow \infty }\|u_{m}-u_{n}\|=0 \tag{10}
+\end{equation}
+\vspace{0.1cm}
+
+Another condition for $\mathcal{H}$ to be a Hilbert space is that there must exist a vector $u \in \mathcal{H}$ \text{ such that:}
+
+\begin{equation}
+\lim _{n\rightarrow \infty }\|u_{n}-u\|=0 \tag{11}
+\end{equation}
+\vspace{0.1cm}
+
+ If limits leak out of the space, it is simply ann inner product space. However, if the limit stays within the space, it is a Hilbert space. This guaranties that infinite sums like this behave predictably.
+
+\section{Matrices}
+
+What is a matrix? A matrix can be defined as a grid, or a two dimensional arrangement of numbers organized in rows and columns. An easy way to think of one would be like a spreadsheet or a table. If a grid has $3$ rows and $4$ columns it is called a $3$ x $4$
+\vspace{0.5cm}
+matrix.
+
+Their purpose is to hold collections of number to be able to be worked with as a single unit.
+\vspace{0.5cm} 
+Multiplying a vector by a matrix shifts, stretches, or rotates that data.
+
+An example being given a matrix $A$ is a rectangular array of numbers ordered into $m$ rows an $n$ columns, dimension $m$ x $n$. An individual element located in row y and column z is denoted as $a_{yz}$. The matrix can be represented like so:
+
+\begin{equation}
+A=\begin{pmatrix}a_{11}&a_{12}&\cdots &a_{1n}\\ a_{21}&a_{22}&\cdots &a_{2n}\\ \vdots &\vdots &\ddots &\vdots \\ a_{m1}&a_{m2}&\cdots &a_{mn}\end{pmatrix} \tag{12}
+\end{equation}
+\vspace{0.1cm}
+
+We also have the identity matrix. The identity matrix behaves like the number $1$ when doing normal multiplication. It is a square matrix, $m$ x $n$, with ones along the main diagonal and zeros everywhere else. It is defined using the Kronecker Delta, ($\delta _{ij}$):
+
+\begin{equation}
+I_{n}=(\delta _{ij})_{n\times n}\quad \text{where}\quad \delta _{ij}=\begin{cases}1&\text{if\ }i=j\\ 0&\text{if\ }i\ne j\end{cases} \tag{13}
+\end{equation}
+
+\begin{equation*}
+I_{3}=\begin{pmatrix}1&0&0\\ 0&1&0\\ 0&0&1\end{pmatrix} 
+\end{equation*}
+\vspace{0.1cm}
+
+For any $m$ x $n$ matrix $A$:
+\begin{equation}
+AI_{n}=A\quad \text{and}\quad I_{m}A=A \tag{14}
+\end{equation}
+\vspace{0.1cm}
+
+For matrix multiplication there is a specific rule. The amount of rows must always be the same as the amount of columns in the second matrix. The product C = AB of an $m$ x $r$ matrix $A$ and an $r$ x $n$ matrix $B$ will yield an $m$ x $n$ matrix. The value $c_{ij}$ is the dot product of the i-th row of $A$ and the j-th column of $B$:
+
+\begin{equation}
+c_{ij}=\sum _{k=1}^{r}a_{ik}b_{kj} \tag{15}
+\end{equation}
+\vspace{0.1cm}
+
+The inverse matrix of $A$ ($m$ x $n$), satisfies: 
+
+\begin{equation}
+AA^{-1}=A^{-1}A=I_{n} \tag{16}
+\end{equation}
+\vspace{0.1cm}
+
+A matrix possesses an inverse if and only if its determinant is non-zero ($\det(A) \neq 0$). If $\det(A) = 0$, the matrix is singular and cannot be inverted.
+
+The formula for a matrix ($m$ x $n$), using the adjugate matrix $(adj(A))$ that is the transpose of cofactor C:
+
+\begin{equation}
+A^{-1}=\frac{1}{\det (A)}\text{adj}(A)=\frac{1}{\det (A)}C^{T} \tag{17}
+\end{equation}
+\vspace{0.1cm}
+
+Where the cofactor entry $c_{ij}$ is calculated using the minor $M_{ij}$:
+
+\begin{equation}
+c_{ij}=(-1)^{i+j}\det (M_{ij}) \tag{18}
+\end{equation}
+\vspace{0.1cm}
+
+Now for the mathematical logic of Machine Learning. Let $X$ be the design matrix of dimensions $m$ x $n$, where $m$ in the number of data samples and $n$ the number of features. Let $y$ be a column vector of true targets, and w be the weight vector. The system of linear equations for predictions $\hat{y}$ is:
+
+\begin{equation}
+\hat{y}=Xw \tag{19}
+\end{equation}
+\vspace{0.1cm}
+
+To find the optimal weights w, we minimize the Mean Squared Error loss function:
+
+\begin{equation}
+    L(w)=\frac{1}{2m}\|Xw-y\|^{2}=\frac{1}{2m}(Xw-y)^{T}(Xw-y) \tag{20}
+\end{equation}
+\vspace{0.1cm}
+
+Setting the derivative with respect to $w$ to zero yields the Normal Equation: 
+\begin{equation}
+\nabla_w L(w) = \frac{1}{m} X^T(Xw - y) = 0 \implies X^TXw = X^Ty \implies w = (X^TX)^{-1}X^Ty \tag{21}
+\end{equation}
+\vspace{0.1cm}
+
+For deep neural networks, they pass information through affine transformations followed by non-linear activations. Let $a^{l-1}$ be the activation output vector from layer $l-1$. The linear combination $z^{l}$ for layer $l$ is calculated using a weight matrix $W^{l}$ and a bias vector $b^l$:
+
+\begin{equation}
+    z^{(l)}=W^{(l)}a^{(l-1)}+b^{(l)} \tag{22}
+\end{equation}
+\vspace{0.1cm}
+
+The final activation vector $a^{(l)}$ applies an element-wise non-linear activation function $\sigma$ (such as Sigmoid or ReLU):
+
+\begin{equation}
+a^{(l)}=\sigma \left(z^{(l)}\right) \tag{23}
+\end{equation}
+\vspace{0.1cm}
+
+To update the weights, we have to find the gradient of the total loss $L$ w.r.t each weight matrix $W^l$. Let $\delta^{l} = \nabla_{z^{l}} L$ represent the error vector at layer l. Using the vector-matrix chain rule: 
+
+\begin{equation}
+\delta ^{(l)}=\left((W^{(l+1)})^{T}\delta ^{(l+1)}\right)\odot \sigma ^{\prime }\left(z^{(l)}\right) \tag{24}
+\end{equation}
+\vspace{0.1cm}
+
+Where $\odot$ represents the Hadamard product. The gradient with respect to the weight matrix is then solved via an outer product of the error vector and the previous layer's activations:
+
+\begin{equation}
+\frac{\partial L}{\partial W^{(l)}}=\delta ^{(l)}(a^{(l-1)})^{T} \tag{25}
+\end{equation}
+ \vspace{0.1cm}
+
+A quantum state is represented as a unit length vector using Dirac notation:
+• Ket, $\vert\psi\rangle$), a column vector representing the quantum state.
+• Bra, $\langle\psi\vert$), a row vector representing the conjugate transpose of the ket: 
+
+\begin{equation}
+\langle\psi\vert = (\vert\psi\rangle)^\dagger = (\vert\psi\rangle^*)^T. \tag{26}
+\end{equation}
+\vspace{0.1cm}
+
+A single qubit state $\vert\psi\rangle$ lives in a 2-dimensional complex vector space $\mathbb{C}^{2}$, expressed as a combination of the basis states $\vert{}0\rangle$ and $\vert{}1\rangle$:
+
+\begin{equation}
+|\psi \rangle =\alpha |0\rangle +\beta |1\rangle =\alpha \begin{pmatrix}1\\ 0\end{pmatrix}+\beta \begin{pmatrix}0\\ 1\end{pmatrix}=\begin{pmatrix}\alpha \\ \beta \end{pmatrix} \tag{27}
+\end{equation}
+\vspace{0.1cm}
+
+Where $\alpha, \beta \in \mathbb{C}$. The Born Rule dictates total probability conservation, forcing the vector to have a length of 1:
+
+\begin{equation}
+\langle \psi |\psi \rangle =|\alpha |^{2}+|\beta |^{2}=1 \tag{28}
+\end{equation}
+\vspace{0.1cm}
+
+\section{Quantum Integration to Machine Learning}
+
+Integrating quantum mechanics into machine learning extends far beyond basic numerical addition, this paper has gone over matrices and their involvement in machine learning, as well as the core concepts of quantum mechanics. To complete this integration we split this into two primary paradigms. Quantum enhanced Classical Machine Learning and Quantum Learning on Quantum Data.
+
+To process classical data $x \in \mathbb{R}^n$ using quantum mechanics, we have to map the classical vector to a quantum state vector $\vert\psi(x)\rangle$. This non-linear mapping acts as a quantum feature map:
+
+\begin{equation}
+    \Phi :\mathbb{R}^{n}\rightarrow \mathcal{H} \tag{29}
+\end{equation}
+\vspace{0.1cm}
+
+Where $\mathcal{H}$ is a high dimensional complex Hilbert space.
+
+Classical data is loaded directly into the probability amplitudes of a superposition state. An n-dimensional classical vector $x = [x_1, x_2, \dots, x_N]^T$ is normalized so that $\Vert{}x\Vert{}^2 = 1$ is encoded into $\log_2(N)$ qubits:
+
+\begin{equation}
+|\psi (x)\rangle =\sum _{i=1}^{N}x_{i}|i\rangle \tag{30}
+\end{equation}
+\vspace{0.1cm}
+
+The mathematical logic leverages exponential state-space scaling, enabling the processing of massive
+\vspace{0.5cm}
+vectors.
+
+Data features are encoded as rotation angles of quantum gates. For a vector with n feature, n qubits are required: 
+
+\begin{equation}
+|\psi (x)\rangle =\bigotimes _{i=1}^{n}R_{x}(x_{i})|0\rangle =\bigotimes _{i=1}^{n}\begin{pmatrix}\cos \left(\frac{x_{i}}{2}\right)\\ -i\sin \left(\frac{x_{i}}{2}\right)\end{pmatrix} \tag{31}
+\end{equation}
+\vspace{0.1cm}
+
+The most prominent model for near-term Quantum Machine Learning is the Variational Quantum Circuit, abbreviated as VQC, which functions as a Quantum Neural Network
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{vqc.png}
+    \caption{{\small Adapted from ResearchGate, A Variational Quantum Circuit (VQC) is a parameterized quantum circuit that uses a classical optimization loop to iteratively update its gate variables to solve a specific machine learning or chemistry problem.}}
+    \label{fig:vqc_diagram}
+\end{figure}
+
+\vspace{0.3cm}
+
+The forward pass is where we prepare the encoded input state $\vert\psi(x)\rangle$, then apply a unitary transformation $U(\theta)$ composed of adjustable quantum gates like $R_y(\theta)$ or CNOTs for entanglement, where $\theta$ represents the trainable weights:
+
+\begin{equation}
+|\psi (x,\theta )\rangle =U(\theta )|\psi (x)\rangle \tag{32}
+\end{equation}
+\vspace{0.1cm}
+
+Then, we measure the expectation value of a chosen Hermitian observable B, such as the Pauli-Z operator, to yield a classical scalar prediction $\hat{y}$:
+
+\begin{equation}
+\hat{y}(x,\theta )=\langle \psi (x,\theta )|B|\psi (x,\theta )\rangle =\langle \psi (x)|U^{\dag }(\theta )BU(\theta )|\psi (x)\rangle \tag{33}
+\end{equation}
+\vspace{0.5cm}
+
+The Backward Pass evaluates the gradients of the quantum circuit mathematically. If a gate is parameterized by $\theta_i$, the exact analytical gradient of the expected value w.r.t $\theta_i$ is calculated by shifting the parameter forwards and backwards by a constant factor of $\frac{\pi}{2}$:
+
+\begin{equation}
+    \frac{\partial \hat{y}(x,\theta )}{\partial \theta _{i}}=\frac{\hat{y}\left(x,\theta +\frac{\pi }{2}e_{i}\right)-\hat{y}\left(x,\theta -\frac{\pi }{2}e_{i}\right)}{2} \tag{34}
+\end{equation}
+\vspace{0.1cm}
+
+Where $e_i$ is a unit vector in the direction of the $i$-th parameter. A classical optimizer then upgrades the weights to:
+
+\begin{equation}
+\theta \leftarrow \theta -\eta \nabla _{\theta }L(y,\hat{y}) \tag{35}
+\end{equation}
+\vspace{0.5cm}
+
+In classical machine learning, Support Vector Machines, abbreviated to SVMs, use a kernel function $K(x, x') = \langle \Phi(x), \Phi(x') \rangle$ to map data into higher-dimensional space where it becomes linearly separable.
+
+Quantum computers can calculate kernels that are classically impossible to solve by evaluating the inner product of two quantum mapped states in Hilbert space.
+
+Given two classical inputs $x$ and $x'$, we map them to $\vert\psi(x)\rangle = U_{\Phi}(x)\vert0\rangle$ and $\vert\psi(x')\rangle = U_{\Phi}(x')\vert0\rangle$. The quantum kernel is defined as the transition probability between the two states:
+\begin{equation} K(x,x^{\prime })=\vert{}\langle \psi (x)\vert{}\psi (x^{\prime })\rangle \vert{}^{2}=\vert{}\langle 0\vert{}U_{\Phi }^{\dagger }(x)U_{\Phi }(x^{\prime })\vert{}0\rangle \vert{}^{2} \tag{36} 
+\end{equation} 
+\vspace{0.1cm}
+
+If \(U_\phi\) is complex enough the quantum kernel constructs a high dimensional feature landscape that classical algorithms cannot efficiently sample, enabling the discovery of hidden correlation 
+\(\vspace{0.3cm}\)
+structures.
+
+In Quantum Learning on Quantum Data, when dealing with actual physical quantum systems, the data 
+\(\vspace{0.2cm}\)
+itself exists as a quantum density matrix \(\rho\).
+
+Instead of converting a quantum state into classical numbers, a machine learning model can be made purely out of quantum gates to take \(\rho_{in}\) and map it directly to an output density matrix \(\rho_{out}\):
+
+\begin{equation}
+    \rho _{out}=\text{Tr}_{env}\left(U(\theta )(\rho _{in}\otimes \rho _{ancilla})U^{\dagger }(\theta )\right) \tag{37} 
+\end{equation}
+\vspace{0.1cm}
+
+This approach provides an advantage for classifying quantum phases of matter or predicting molecular energy configurations without classical bottlenecks.
+
+\section{Conclusion}
+
+The ultimate paradox of quantum mechanics is that by making information fundamentally more 
+complex, it makes solving the universe's most demanding problems so beautifully simpler. 
+\vspace{0.3cm}
+
+We began our journey asking a vital question, why would a machine trying to learn deliberately choose to abandon the safe binary of classical computing for a unruly landscape of simultaneous, contradictory states? The geometry of the Bloch sphere and the algebraic logic of quantum gates reveal the answer. By caging the unmeasurable global phase and transforming abstract data into physical rotations on a sphere, quantum computing does not 
+\vspace{0.3cm}
+overcomplicate machine learning, it frees it.
+
+Through tools like the Hadamard gate creating superpositions and the CNOT gate engineering entanglement, Quantum Machine Learning avoids the slow, brute force sequencing of classical circuits. Instead, it allows a machine to analyze an entire multidimensional problem space at the exact same moment. High dimensional Hilbert spaces, which would completely paralyze a classical computer, become a playground where complex data patterns can be simplified,
+\vspace{0.3cm}
+untangled, and solved. 
+
+Applying the strict axioms of pure mathematics to the lawless subatomic realm is an ongoing human challenge. Quantum hardware remains fragile, and noise threatens the delicate interference patterns of the phase gates. Yet, as the energy crisis of traditional, power hungry classical AI looms larger, the necessity of a paradigm shift becomes absolute. The qubit is not just a mathematical curiosity, it is a defiance of the boundaries we once thought were written by a higher power. By tearing up the classical rulebook of ones and zeros, mathematics has granted us a \(\textbf{piece of both},\) illuminating a future where machines do not just compute data, but truly mirror the profound, fluid reality of the universe itself.
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{mit-energy}
+J. O'Donnell and C. Crownhart, ``We did the math on AI's energy footprint. Here's the story you haven't heard,'' \textit{MIT Technology Review}, May 2025. [Online]. Available: \url{https://technologyreview.com}
+
+\bibitem{hf-video}
+J. Delavande, R. Pierrard, and S. Luccioni, ``Video Killed the Energy Budget: Characterizing the Latency and Power Regimes of Open Text-to-Video Models,'' \textit{arXiv}, arXiv:2509.19222, Sep. 2025. [Online]. Available: \url{https://huggingface.co}
+
+\bibitem{rg-bloch}
+``The Bloch sphere is a three-dimensional space with three axes: X, Y, and Z,'' \textit{ResearchGate Content Archive}, figure reference. [Online]. Available: \url{https://researchgate.net}
+
+\bibitem{rg-vqc}
+``The general architecture for a single variational quantum circuit (VQC) is described as,'' \textit{ResearchGate Content Archive}, figure reference. [Online]. Available: \url{https://researchgate.net}
+
+\bibitem{nielsen-chuang}
+M. A. Nielsen and I. L. Chuang, \textit{Quantum Computation and Quantum Information}, 10th Anniversary ed. Cambridge, U.K.: Cambridge University Press, 2010.
+
+\bibitem{schuld-petruccione}
+M. Schuld and F. Petruccione, \textit{Machine Learning with Quantum Computers}, 2nd ed. Cham, Switzerland: Springer, 2021.
+
+\end{thebibliography}
+
+\end{document}
